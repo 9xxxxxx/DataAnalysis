@@ -62,6 +62,7 @@ part_pattern = {'USB-C转USB转换器': 'USB-C转USB转换器',
  '聚风嘴': '聚风嘴',
  '气垫梳': '气垫梳',
  '塑胶': 'ABS'}
+
 part_pattern = dict(sorted(part_pattern.items(), key=lambda item: len(item[0]), reverse=True),)
 
 color_pattern = {
@@ -141,9 +142,13 @@ def match_and_label(row):
 #匹配具体型号函数
 def match2time(row):
     for key, value in tqdm(part_pattern.items(), desc = 'FUCKING PROCESSING.......'):
+        # 重复了的不在匹配
+        if value in row['型号']:
+            return row['型号']  # 不进行匹配
         # 使用正则表达式确保精确匹配
-        if re.search(key, row['商品名称']):
-            return row['型号'] + ' ' + value  # 找到第一个匹配，立即返回
+        else:
+            if re.search(key, row['商品名称']):
+                return row['型号'] + ' ' + value  # 找到第一个匹配，立即返回
     return row['型号']  # 如果没有匹配，返回无匹配
 
 # 合并名称函数
